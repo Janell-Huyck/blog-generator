@@ -130,6 +130,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "/static/"
+# if I'm having trouble with static files not being displayed in production on digital ocean, check out the static site's http 
+# request routes.  It is currently set to /static and it may need to be /static/ or this may need to be changed to /static.
+
+
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
