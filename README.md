@@ -1,0 +1,1 @@
+Note to Janell: To start the virtual environment, run `source ~/.venvs/django/bin/activate`
