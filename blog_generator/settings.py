@@ -150,5 +150,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [f"http://{host}" for host in os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost:3000",).split(",")]
-print("CORS_ALLOWED_ORIGINS: ", CORS_ALLOWED_ORIGINS)
 
