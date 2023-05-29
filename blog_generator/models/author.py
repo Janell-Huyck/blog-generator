@@ -16,8 +16,7 @@ def get_default_author_status():
 
 
 class Author(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    full_name = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True, blank=True)
     bio = models.CharField(max_length=5000, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures', blank=True)
@@ -27,7 +26,12 @@ class Author(models.Model):
 
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.full_name}"
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.full_name)
+        super().save(*args, **kwargs)
     
     def get_absolute_url(self):
         return reverse('author-detail', kwargs={'slug': self.slug})
@@ -37,12 +41,6 @@ class Author(models.Model):
     
     def get_posts_count(self):
         return Post.objects.filter(author=self).count()
-    
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
-    
-    def get_short_name(self):
-        return self.first_name
     
     def get_bio_as_markdown(self):
         return mark_safe(markdown(self.bio, safe_mode='escape'))

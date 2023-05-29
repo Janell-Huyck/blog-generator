@@ -7,13 +7,9 @@ from .models.tag import Tag
 
 
 class AuthorSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField()
     class Meta:
         model = Author
-        fields = fields = ['first_name', 'last_name', 'email', 'bio', 'profile_picture', 'slug', 'status', 'home_page', 'name']  # Include 'name' in the fields
-
-    def get_name(self, obj):
-        return obj.get_full_name()
+        fields = fields = fields = '__all__'
     
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:

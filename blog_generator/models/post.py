@@ -29,7 +29,7 @@ class Post(models.Model):
     image2 = models.ImageField(upload_to='post_images', blank=True)
     image3 = models.ImageField(upload_to='post_images', blank=True)
     image4 = models.ImageField(upload_to='post_images', blank=True)
-    category = models.ForeignKey(Category, blank=True, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, blank=True)
     comments = models.ManyToManyField('Comment', blank=True, related_name='comments')
     slug = models.SlugField(max_length=100, unique=True)
@@ -42,6 +42,11 @@ class Post(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
     
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'slug': self.slug})

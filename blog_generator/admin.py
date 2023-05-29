@@ -16,10 +16,17 @@ from .models.flag import Flag
 from .models.flag_category import FlagCategory
 
 
-# Register your models here.
-admin.site.register(Author)
+class PostAdmin(admin.ModelAdmin):
+    exclude = ['slug']
+
+class AuthorAdmin(admin.ModelAdmin):
+    exclude = ['slug']
+
+
+admin.site.register(Author, AuthorAdmin)
+admin.site.register(Post, PostAdmin)
+
 admin.site.register(AuthorStatus)
-admin.site.register(Post)
 admin.site.register(PostStatus)
 admin.site.register(Commenter)
 admin.site.register(CommenterStatus)

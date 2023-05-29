@@ -11,4 +11,5 @@ router.register(r'comments', views.CommentViewSet, basename='comment')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('api/generatepost/', views.generate_post),
 ]

@@ -17,20 +17,13 @@ def get_default_commenter_status():
 
 
 class Commenter(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    full_name=models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     status = models.ForeignKey(CommenterStatus, on_delete=models.CASCADE, default=get_default_commenter_status)
     
     def __str__(self):
-        return self.get_full_name()
-    
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
-    
-    def get_short_name(self):
-        return self.first_name
-    
+        return self.full_name
+
     def get_email(self):
         return self.email
     

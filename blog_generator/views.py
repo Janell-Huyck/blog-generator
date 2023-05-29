@@ -1,8 +1,17 @@
+
+import requests
+import os
+import openai
 from rest_framework import viewsets
 from .models.post import Post
 from .models.author import Author
 from .models.comment import Comment
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
 from .serializers import PostSerializer, AuthorSerializer, CommentSerializer
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -27,7 +36,24 @@ class CommentViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-from django.shortcuts import render
+@api_view(['POST'])
+def generate_post(request):
+    openai.api_key = os.getenv('OPENAI_API_KEY')
 
-def index(request):
-    return render(request, 'posts/index.html')
+    completion = openai.ChatCompletion.create(
+        model = "gpt-3.5-turbo",
+        temperature = 0.8,
+        max_tokens = 500,
+        messages = [
+            {"role": "system", "content": "You are a blog writer that writes whimsical and snarky blog posts about technical topics."},
+            {"role": "user", "content": f"Write a blog post about {request.data['topic']}.  Use no more than 500 words."}
+            ]
+        )
+
+    print(completion.choices[0].message.content)
+    response_content = completion.choices[0].message.content.strip()
+    new_post = Post(title=request.data['topic'], content=response_content, author=Author.objects.get(id=1))
+    new_post.save()
+    serializer = PostSerializer(new_post)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
