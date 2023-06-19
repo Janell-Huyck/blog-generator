@@ -44,8 +44,11 @@ class Post(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
+        print("Saving post", self.title)
         if not self.slug:
+            print("No slug found")
             self.slug = slugify(self.title)
+            print("Slug created", self.slug)
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
